@@ -1,0 +1,17 @@
+# North Hall Event Desk — Render free web service.
+# SQLite lives on the instance disk and is recreated on startup when empty.
+services:
+  - type: web
+    name: north-hall
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22.23.4"
+      - key: SESSION_SECRET
+        generateValue: true

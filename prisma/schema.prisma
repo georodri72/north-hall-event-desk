@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id
+  email        String   @unique
+  name         String
+  title        String
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Room {
+  id         String    @id
+  name       String
+  floor      String
+  summary    String
+  builtInAv  String
+  capacities String
+  sortOrder  Int
+  bookings   Booking[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Booking {
+  id             String   @id
+  eventName      String
+  organization   String   @default("")
+  requesterName  String
+  requesterEmail String   @default("")
+  requesterPhone String   @default("")
+  onsiteName     String   @default("")
+  onsitePhone    String   @default("")
+  onsiteEmail    String   @default("")
+  date           String
+  startMin       Int
+  endMin         Int
+  setupMin       Int      @default(30)
+  teardownMin    Int      @default(30)
+  roomId         String
+  room           Room     @relation(fields: [roomId], references: [id])
+  headcount      Int
+  setupStyle     String
+  status         String   @default("confirmed")
+  avItems        String   @default("[]")
+  avNotes        String   @default("")
+  cateringItems  String   @default("[]")
+  notes          String   @default("")
+  timeline       String   @default("[]")
+  narrative      String   @default("")
+  draftSource    String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([date, roomId])
+  @@index([date])
+}
